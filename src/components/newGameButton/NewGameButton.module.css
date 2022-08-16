@@ -1,0 +1,17 @@
+.root {
+  width: 40px;
+  height: 40px;
+  background-image: url(../../assets/images/smile.png);
+  background-repeat: no-repeat;
+  background-size: 80%;
+  background-position: center;
+  background-color: buttonface;
+}
+
+.root.winner {
+  background-image: url(../../assets/images/bright.png);
+}
+
+.root.loser {
+  background-image: url(../../assets/images/sad.png);
+}
