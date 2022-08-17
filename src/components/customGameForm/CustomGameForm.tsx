@@ -15,10 +15,19 @@ export const CustomGameForm = observer(() => {
 
     const formElements = e.currentTarget.elements as FormElements;
 
+    const rows = parseInt(formElements.rows.value, 10);
+    const columns = parseInt(formElements.columns.value, 10);
+    const bombs = parseInt(formElements.bombs.value, 10);
+
+    if (rows * columns <= bombs) {
+      alert("Bombs must be less then square count");
+      return;
+    }
+
     store.startGame(GameType.custom, {
-      rows: parseInt(formElements.rows.value, 10),
-      columns: parseInt(formElements.columns.value, 10),
-      bombs: parseInt(formElements.bombs.value, 10),
+      rows,
+      columns,
+      bombs,
     });
   };
 
@@ -31,6 +40,7 @@ export const CustomGameForm = observer(() => {
         id="rows"
         placeholder="Rows"
         defaultValue={customGameOptions.rows}
+        min={1}
       />
       <input
         className={styles.input}
@@ -39,6 +49,7 @@ export const CustomGameForm = observer(() => {
         id="columns"
         placeholder="Columns"
         defaultValue={customGameOptions.columns}
+        min={1}
       />
       <input
         className={styles.input}
@@ -47,6 +58,8 @@ export const CustomGameForm = observer(() => {
         id="bombs"
         placeholder="Bombs"
         defaultValue={customGameOptions.bombs}
+        min={1}
+        max={999}
       />
       <input className={styles.input} type="submit" />
     </form>

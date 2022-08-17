@@ -26,7 +26,7 @@ export class Cell {
     this.marked = false;
 
     if (this.bombsAmount === 0 && !this.hasBomb) {
-      this.openEmptySiblings();
+      setTimeout(() => this.openEmptySiblings());
     }
   }
 

@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { observer } from "mobx-react-lite";
 import { PropsWithChildren, useEffect } from "react";
 import { GameType, store } from "../../app/store";
@@ -18,14 +17,7 @@ export const Game = observer(({ type }: Props) => {
   }, [type]);
 
   return (
-    <div
-      className={clsx("Game", {
-        easy: store.gameType === GameType.easy,
-        medium: store.gameType === GameType.medium,
-        hard: store.gameType === GameType.hard,
-        custom: store.gameType === GameType.custom,
-      })}
-    >
+    <div className="Game">
       <header className="Game__header">
         <div className="bombs_counter">
           <BombsLeft />

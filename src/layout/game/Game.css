@@ -1,32 +1,12 @@
 .Game {
   display: flex;
   flex-direction: column;
-  width: 600px;
-  height: 600px;
+  width: fit-content;
+  height: fit-content;
+  min-width: 300px;
   margin: auto;
   border: 2px solid gray;
   padding: 20px;
-}
-
-.Game.easy {
-  width: 500px;
-  height: 500px;
-}
-
-.Game.medium {
-  width: 700px;
-  height: 700px;
-}
-
-.Game.hard {
-  width: 1100px;
-  height: 700px;
-}
-
-.Game.custom {
-  width: fit-content;
-  min-width: 300px;
-  height: auto;
 }
 
 .Game__header {

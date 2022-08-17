@@ -2,17 +2,3 @@
   display: grid;
   height: 100%;
 }
-.easy {
-  grid-template-columns: repeat(9, minmax(30px, 1fr));
-  grid-template-rows: repeat(9, minmax(30px, 1fr));
-}
-
-.medium {
-  grid-template-columns: repeat(16, 1fr);
-  grid-template-rows: repeat(16, 1fr);
-}
-
-.hard {
-  grid-template-columns: repeat(30, 1fr);
-  grid-template-rows: repeat(16, 1fr);
-}

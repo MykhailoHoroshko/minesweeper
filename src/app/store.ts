@@ -171,7 +171,7 @@ class RootStore {
     const passed = this.timer?.stop();
     setTimeout(() => {
       alert(`You ${win ? "win" : "lose"} ${passed}sec`);
-    }, 1);
+    });
   }
 }
 
