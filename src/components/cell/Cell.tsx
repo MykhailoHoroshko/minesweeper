@@ -24,8 +24,8 @@ export const Cell = observer(({ cell }: Props) => {
         cell.press();
 
         if (store.initalPress) {
-          store.initalPress = false;
-          store.timer?.start();
+          store.initializeGame(cell);
+          return;
         }
 
         if (cell.hasBomb) {

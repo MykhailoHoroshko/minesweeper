@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable } from "mobx";
 
 export type CellInitOptions = {
-  hasBomb: boolean;
+  hasBomb?: boolean;
 };
 
 export class Cell {
@@ -9,7 +9,7 @@ export class Cell {
   hasBomb = false;
   marked = false;
   siblings: Cell[] = [];
-  constructor({ hasBomb }: CellInitOptions) {
+  constructor(opts?: CellInitOptions) {
     makeObservable(this, {
       pressed: observable,
       hasBomb: observable,
@@ -18,7 +18,7 @@ export class Cell {
       siblings: observable,
       marked: observable,
     });
-    this.hasBomb = hasBomb;
+    this.hasBomb = !!opts?.hasBomb;
   }
 
   press() {

@@ -95,38 +95,37 @@ class RootStore {
     return this.bombs - this.cells.filter((cell) => cell.marked).length;
   }
 
-  startGame(type: GameType, options?: GameOptions) {
-    this.inProgress = true;
-    this.gameType = type;
-    this.winner = null;
-    this.initalPress = true;
-    this.timer?.stop();
-    this.timer = new Timer();
+  drawGrid() {
+    const totalCells = this.rows * this.columns;
+    const cells: Cell[] = [];
 
-    const { rows, columns, bombs } = options ?? gameOptions[type];
-    this.rows = rows;
-    this.columns = columns;
-    this.bombs = bombs;
-    const totalCells = rows * columns;
-
-    const set = new Set();
-
-    while (set.size < bombs) {
-      const index = Math.floor(Math.random() * totalCells);
-      set.add(index);
+    for (let i = 0; i < totalCells; i++) {
+      cells.push(new Cell());
     }
 
+    this.cells = cells;
+  }
+
+  assignBombs(ignoreCell: Cell) {
+    const totalCells = this.rows * this.columns;
+
+    const set = new Set();
     const grid: Cell[][] = [];
 
-    for (let i = 0; i < rows; i++) {
-      const cells: Cell[] = [];
+    while (set.size < this.bombs) {
+      const index = Math.floor(Math.random() * totalCells);
+      if (ignoreCell !== this.cells[index]) {
+        set.add(index);
+      }
+    }
 
-      for (let j = 0; j < columns; j++) {
-        const key = i * columns + j;
-        cells.push(new Cell({ hasBomb: set.has(key) }));
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.columns; j++) {
+        const key = i * this.columns + j;
+        this.cells[key].hasBomb = set.has(key);
       }
 
-      grid.push(cells);
+      grid.push(this.cells.slice(i * this.columns, (i + 1) * this.columns));
     }
 
     grid.forEach((row, i) => {
@@ -145,7 +144,7 @@ class RootStore {
           cell.siblings.push(row[j + 1]);
         }
 
-        if (i < rows - 1) {
+        if (i < this.rows - 1) {
           if (row[j - 1]) cell.siblings.push(grid[i + 1][j - 1]);
           cell.siblings.push(grid[i + 1][j]);
           if (row[j + 1]) cell.siblings.push(grid[i + 1][j + 1]);
@@ -154,6 +153,28 @@ class RootStore {
     });
 
     this.cells = grid.flat();
+  }
+
+  initializeGame(ingoreCell: Cell) {
+    this.initalPress = false;
+    this.timer?.start();
+    this.assignBombs(ingoreCell);
+  }
+
+  startGame(type: GameType, options?: GameOptions) {
+    this.inProgress = true;
+    this.gameType = type;
+    this.winner = null;
+    this.initalPress = true;
+    this.timer?.stop();
+    this.timer = new Timer();
+
+    const { rows, columns, bombs } = options ?? gameOptions[type];
+    this.rows = rows;
+    this.columns = columns;
+    this.bombs = bombs;
+
+    this.drawGrid();
   }
 
   stopGame(win: boolean) {
