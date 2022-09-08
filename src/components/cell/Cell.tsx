@@ -29,7 +29,7 @@ export const Cell = observer(({ cell }: Props) => {
         }
 
         if (cell.hasBomb) {
-          store.stopGame(false);
+          store.informLooser();
         }
       }}
       onContextMenu={(e) => {

@@ -26,7 +26,7 @@ export class Cell {
     this.marked = false;
 
     if (this.bombsAmount === 0 && !this.hasBomb) {
-      setTimeout(() => this.openEmptySiblings());
+      setTimeout(() => this.revealEmptySiblings());
     }
   }
 
@@ -38,7 +38,7 @@ export class Cell {
     return this.siblings.filter((cell) => cell.hasBomb).length;
   }
 
-  openEmptySiblings() {
+  revealEmptySiblings() {
     this.siblings.forEach((cell) => {
       if (cell.pressed || cell.hasBomb) {
         return;

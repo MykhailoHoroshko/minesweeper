@@ -60,24 +60,23 @@ class RootStore {
       timer: observable,
       initalPress: observable,
       startGame: action,
-      stopGame: action,
       allCellsWithoutBombPressed: computed,
       winner: observable,
       rows: observable,
       columns: observable,
       bombs: observable,
+      informWinner: action,
+      informLooser: action,
     });
 
     reaction(
       () => this.allCellsWithoutBombPressed,
       (value) => {
         if (value) {
-          this.stopGame(true);
+          this.informWinner();
         }
       }
     );
-
-    this.startGame(GameType.easy);
   }
 
   get allCellsWithoutBombPressed() {
@@ -96,21 +95,15 @@ class RootStore {
   }
 
   drawGrid() {
-    const totalCells = this.rows * this.columns;
-    const cells: Cell[] = [];
-
-    for (let i = 0; i < totalCells; i++) {
-      cells.push(new Cell());
-    }
-
-    this.cells = cells;
+    this.cells = new Array(this.rows * this.columns)
+      .fill(null)
+      .map(() => new Cell());
   }
 
   assignBombs(ignoreCell: Cell) {
     const totalCells = this.rows * this.columns;
 
     const set = new Set();
-    const grid: Cell[][] = [];
 
     while (set.size < this.bombs) {
       const index = Math.floor(Math.random() * totalCells);
@@ -119,21 +112,27 @@ class RootStore {
       }
     }
 
+    let prevRow: Cell[] | null = null;
+    let row = this.cells.slice(0, this.columns);
+
     for (let i = 0; i < this.rows; i++) {
+      let nextRow: Cell[] | null = null;
+
+      if (i < this.rows - 1) {
+        nextRow = this.cells.slice(
+          (i + 1) * this.columns,
+          (i + 2) * this.columns
+        );
+      }
       for (let j = 0; j < this.columns; j++) {
         const key = i * this.columns + j;
-        this.cells[key].hasBomb = set.has(key);
-      }
+        const cell = this.cells[key];
+        cell.hasBomb = set.has(key);
 
-      grid.push(this.cells.slice(i * this.columns, (i + 1) * this.columns));
-    }
-
-    grid.forEach((row, i) => {
-      row.forEach((cell, j) => {
-        if (i > 0) {
-          if (row[j - 1]) cell.siblings.push(grid[i - 1][j - 1]);
-          cell.siblings.push(grid[i - 1][j]);
-          if (row[j + 1]) cell.siblings.push(grid[i - 1][j + 1]);
+        if (prevRow) {
+          if (prevRow[j - 1]) cell.siblings.push(prevRow[j - 1]);
+          cell.siblings.push(prevRow[j]);
+          if (prevRow[j + 1]) cell.siblings.push(prevRow[j + 1]);
         }
 
         if (row[j - 1]) {
@@ -144,15 +143,17 @@ class RootStore {
           cell.siblings.push(row[j + 1]);
         }
 
-        if (i < this.rows - 1) {
-          if (row[j - 1]) cell.siblings.push(grid[i + 1][j - 1]);
-          cell.siblings.push(grid[i + 1][j]);
-          if (row[j + 1]) cell.siblings.push(grid[i + 1][j + 1]);
+        if (nextRow) {
+          if (nextRow[j - 1]) cell.siblings.push(nextRow[j - 1]);
+          cell.siblings.push(nextRow[j]);
+          if (nextRow[j + 1]) cell.siblings.push(nextRow[j + 1]);
         }
-      });
-    });
-
-    this.cells = grid.flat();
+      }
+      prevRow = row;
+      if (nextRow) {
+        row = nextRow;
+      }
+    }
   }
 
   initializeGame(ingoreCell: Cell) {
@@ -177,21 +178,29 @@ class RootStore {
     this.drawGrid();
   }
 
-  stopGame(win: boolean) {
+  informWinner() {
     this.inProgress = false;
-    this.winner = win;
-
-    if (!win) {
-      this.cells.forEach((cell) => {
-        if (cell.hasBomb) {
-          cell.press();
-        }
-      });
-    }
+    this.winner = true;
 
     const passed = this.timer?.stop();
     setTimeout(() => {
-      alert(`You ${win ? "win" : "lose"} ${passed}sec`);
+      alert(`You win ${passed}sec`);
+    });
+  }
+
+  informLooser() {
+    this.inProgress = false;
+    this.winner = false;
+
+    this.cells.forEach((cell) => {
+      if (cell.hasBomb) {
+        cell.press();
+      }
+    });
+
+    const passed = this.timer?.stop();
+    setTimeout(() => {
+      alert(`You lose ${passed}sec`);
     });
   }
 }

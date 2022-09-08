@@ -1,8 +1,7 @@
-import { observer } from "mobx-react-lite";
 import { PropsWithChildren, useEffect } from "react";
 import { GameType, store } from "../../app/store";
 import { Board } from "../../components/board/Board";
-import { BombsLeft } from "../../components/bombsLeft/BombsLeft";
+import { BombsCount } from "../../components/bombsCount/BombsCount";
 import { NewGameButton } from "../../components/newGameButton/NewGameButton";
 import { Timer } from "../../components/timer/Timer";
 import "./Game.css";
@@ -11,7 +10,7 @@ export interface Props extends PropsWithChildren {
   type: GameType;
 }
 
-export const Game = observer(({ type }: Props) => {
+export const Game = ({ type }: Props) => {
   useEffect(() => {
     store.startGame(type);
   }, [type]);
@@ -20,7 +19,7 @@ export const Game = observer(({ type }: Props) => {
     <div className="Game">
       <header className="Game__header">
         <div className="bombs_counter">
-          <BombsLeft />
+          <BombsCount />
         </div>
         <div className="new_game">
           <NewGameButton />
@@ -34,4 +33,4 @@ export const Game = observer(({ type }: Props) => {
       </div>
     </div>
   );
-});
+};

@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite";
 import { FormEventHandler } from "react";
 import { customGameOptions, GameType, store } from "../../app/store";
 import styles from "./CustomGameForm.module.css";
@@ -9,7 +8,7 @@ interface FormElements extends HTMLFormControlsCollection {
   bombs: HTMLInputElement;
 }
 
-export const CustomGameForm = observer(() => {
+export const CustomGameForm = () => {
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
@@ -64,4 +63,4 @@ export const CustomGameForm = observer(() => {
       <input className={styles.input} type="submit" />
     </form>
   );
-});
+};
