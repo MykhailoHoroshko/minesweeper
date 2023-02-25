@@ -130,23 +130,23 @@ class RootStore {
         cell.hasBomb = set.has(key);
 
         if (prevRow) {
-          if (prevRow[j - 1]) cell.siblings.push(prevRow[j - 1]);
-          cell.siblings.push(prevRow[j]);
-          if (prevRow[j + 1]) cell.siblings.push(prevRow[j + 1]);
+          if (prevRow[j - 1]) cell.neighbours.push(prevRow[j - 1]);
+          cell.neighbours.push(prevRow[j]);
+          if (prevRow[j + 1]) cell.neighbours.push(prevRow[j + 1]);
         }
 
         if (row[j - 1]) {
-          cell.siblings.push(row[j - 1]);
+          cell.neighbours.push(row[j - 1]);
         }
 
         if (row[j + 1]) {
-          cell.siblings.push(row[j + 1]);
+          cell.neighbours.push(row[j + 1]);
         }
 
         if (nextRow) {
-          if (nextRow[j - 1]) cell.siblings.push(nextRow[j - 1]);
-          cell.siblings.push(nextRow[j]);
-          if (nextRow[j + 1]) cell.siblings.push(nextRow[j + 1]);
+          if (nextRow[j - 1]) cell.neighbours.push(nextRow[j - 1]);
+          cell.neighbours.push(nextRow[j]);
+          if (nextRow[j + 1]) cell.neighbours.push(nextRow[j + 1]);
         }
       }
       prevRow = row;

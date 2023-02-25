@@ -1,24 +1,19 @@
 import { action, computed, makeObservable, observable } from "mobx";
 
-export type CellInitOptions = {
-  hasBomb?: boolean;
-};
-
 export class Cell {
   pressed = false;
   hasBomb = false;
   marked = false;
-  siblings: Cell[] = [];
-  constructor(opts?: CellInitOptions) {
+  neighbours: Cell[] = [];
+  constructor() {
     makeObservable(this, {
       pressed: observable,
       hasBomb: observable,
       press: action,
       bombsAmount: computed,
-      siblings: observable,
+      neighbours: observable,
       marked: observable,
     });
-    this.hasBomb = !!opts?.hasBomb;
   }
 
   press() {
@@ -26,7 +21,7 @@ export class Cell {
     this.marked = false;
 
     if (this.bombsAmount === 0 && !this.hasBomb) {
-      setTimeout(() => this.revealEmptySiblings());
+      setTimeout(() => this.revealEmptyNeighbours());
     }
   }
 
@@ -35,11 +30,11 @@ export class Cell {
   }
 
   get bombsAmount() {
-    return this.siblings.filter((cell) => cell.hasBomb).length;
+    return this.neighbours.filter((cell) => cell.hasBomb).length;
   }
 
-  revealEmptySiblings() {
-    this.siblings.forEach((cell) => {
+  revealEmptyNeighbours() {
+    this.neighbours.forEach((cell) => {
       if (cell.pressed || cell.hasBomb) {
         return;
       }
